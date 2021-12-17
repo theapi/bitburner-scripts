@@ -3,7 +3,7 @@ export async function main(ns) {
 	const args = ns.flags([['help', false]]);
 	const host = args._[0];
 	if (args.help || !host) {
-		ns.tprint("This script will buy a server of ram size given.");
+		ns.tprint("This script will copy files to a server.");
 		ns.tprint(`USAGE: run ${ns.getScriptName()} NAME `);
 		ns.tprint("Example:");
 		ns.tprint(`> run ${ns.getScriptName()} pserv-1`);
