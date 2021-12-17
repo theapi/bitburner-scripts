@@ -17,11 +17,12 @@ export async function main(ns) {
   ns.tprint("Copying scripts...");
 
   const scripts = [
+    'basic-hack.js',
     'do-grow.js',
     'do-weaken.js',
     'do-hack.js',
     'remote-nuke.js',
-    'nectar-net.js',
+    'analyze_server.js',
   ];
   for (const scr of scripts) {
 	  ns.tprint(`Copying '${scr}' to '${host}' `);

@@ -13,8 +13,8 @@ export async function main(ns) {
 
 	while (true) {
 		await ns.grow(target);
-    const v = ns.getServerSecurityLevel(target);
-		const vFmt = new Intl.NumberFormat().format(vFmt);
-		ns.print(`Security of server: \$${vFmt}`);
+    const money = ns.getServerMoneyAvailable(target);
+		const moneyFmt = new Intl.NumberFormat().format(money);
+		ns.print(`Money on server: \$${moneyFmt}`);
 	}
 }

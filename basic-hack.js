@@ -24,9 +24,8 @@ export async function main(ns) {
 
 
 	// Defines how much money a server should have before we hack it
-	// In this case, it is set to 75% of the server's max money
 	const maxMoney = ns.getServerMaxMoney(target);
-	const moneyThresh = maxMoney * 0.25;
+	const moneyThresh = maxMoney * 0.50;
 	ns.print(`maxMoney: ${new Intl.NumberFormat().format(maxMoney)}`);
 	ns.print(`moneyThresh: ${new Intl.NumberFormat().format(moneyThresh)}`);
 
@@ -34,12 +33,11 @@ export async function main(ns) {
 	// have. If the target's security level is higher than this,
 	// we'll weaken it before doing anything else
 	const minSecurity = ns.getServerMinSecurityLevel(target) ;
-	const securityThresh = minSecurity + 5;
+	const securityThresh = minSecurity + 15;
 	ns.print(`minSecurity: ${new Intl.NumberFormat().format(minSecurity)}`);
 	ns.print(`securityThresh: ${new Intl.NumberFormat().format(securityThresh)}`);
 
 	while (true) {
-		//await ns.hack(target);
 		if (ns.getServerSecurityLevel(target) > securityThresh) {
 			await ns.weaken(target);
 		} else if (ns.getServerMoneyAvailable(target) < moneyThresh) {
@@ -47,5 +45,13 @@ export async function main(ns) {
 		} else {
 			await ns.hack(target);
 		}
+
+    const v = ns.getServerSecurityLevel(target);
+		const vFmt = new Intl.NumberFormat().format(v);
+		ns.print(`Security of server: ${vFmt}`);
+
+    const money = ns.getServerMoneyAvailable(target);
+		const moneyFmt = new Intl.NumberFormat().format(money);
+		ns.print(`Money on server: \$${moneyFmt}`);
 	}
 }
