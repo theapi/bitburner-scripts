@@ -32,9 +32,9 @@ export async function main(ns) {
 	// Defines the maximum security level the target server can
 	// have. If the target's security level is higher than this,
 	// we'll weaken it before doing anything else
-	const minSecurity = ns.getServerMinSecurityLevel(target);
-	const securityThresh = minSecurity + 15;
-	ns.print(`minSecurity: ${new Intl.NumberFormat().format(minSecurity)}`);
+	const security = ns.getServerMinSecurityLevel(target);
+	const securityThresh = security + 30;
+	ns.print(`security: ${new Intl.NumberFormat().format(security)}`);
 	ns.print(`securityThresh: ${new Intl.NumberFormat().format(securityThresh)}`);
 
 	while (true) {
