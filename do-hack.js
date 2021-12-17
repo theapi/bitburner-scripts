@@ -13,5 +13,8 @@ export async function main(ns) {
 
 	while (true) {
 		await ns.hack(target);
+		const money = ns.getServerMoneyAvailable(target);
+		const moneyFmt = new Intl.NumberFormat().format(money);
+		ns.print(`Money on server: \$${moneyFmt}`);
 	}
 }
