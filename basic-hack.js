@@ -32,7 +32,7 @@ export async function main(ns) {
 	// Defines the maximum security level the target server can
 	// have. If the target's security level is higher than this,
 	// we'll weaken it before doing anything else
-	const minSecurity = ns.getServerMinSecurityLevel(target) ;
+	const minSecurity = ns.getServerMinSecurityLevel(target);
 	const securityThresh = minSecurity + 15;
 	ns.print(`minSecurity: ${new Intl.NumberFormat().format(minSecurity)}`);
 	ns.print(`securityThresh: ${new Intl.NumberFormat().format(securityThresh)}`);
@@ -46,11 +46,11 @@ export async function main(ns) {
 			await ns.hack(target);
 		}
 
-    const v = ns.getServerSecurityLevel(target);
+		const v = ns.getServerSecurityLevel(target);
 		const vFmt = new Intl.NumberFormat().format(v);
 		ns.print(`Security of server: ${vFmt}`);
 
-    const money = ns.getServerMoneyAvailable(target);
+		const money = ns.getServerMoneyAvailable(target);
 		const moneyFmt = new Intl.NumberFormat().format(money);
 		ns.print(`Money on server: \$${moneyFmt}`);
 	}
