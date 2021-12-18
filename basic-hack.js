@@ -1,4 +1,23 @@
 /** @param {NS} ns **/
+
+// Send to external logger for analysis.
+async function remoteLog(ns, action, target, value) {
+
+	await ns.wget(
+		`https://192.168.0.2:8080/${action}/${target}/${value}`,
+		"junk.txt"
+	);
+
+	const v = ns.getServerSecurityLevel(target);
+	const vFmt = new Intl.NumberFormat().format(v);
+	ns.print(`Security of server: ${vFmt}`);
+
+	const money = ns.getServerMoneyAvailable(target);
+	const moneyFmt = new Intl.NumberFormat().format(money);
+	ns.print(`Money on server: \$${moneyFmt}`);
+
+}
+
 export async function main(ns) {
 	const args = ns.flags([['help', false]]);
 	const target = args._[0];
@@ -22,6 +41,11 @@ export async function main(ns) {
 		}
 	}
 
+	ns.disableLog("getServerSecurityLevel");
+	ns.disableLog("getServerMoneyAvailable");
+	ns.disableLog("getServerMaxMoney");
+	ns.disableLog("getServerMinSecurityLevel");
+	ns.disableLog("wget");
 
 	// Defines how much money a server should have before we hack it
 	const maxMoney = ns.getServerMaxMoney(target);
@@ -40,34 +64,13 @@ export async function main(ns) {
 	while (true) {
 		if (ns.getServerSecurityLevel(target) > securityThresh) {
 			const weak = await ns.weaken(target);
-			// Send to external logger for analysis.
-			await ns.wget(
-				`https://192.168.0.2:8080/eaken/${target}/${weak}`,
-				"junk.txt"
-			);
+			await remoteLog(ns, "weaken", target, weak);
 		} else if (ns.getServerMoneyAvailable(target) < moneyThresh) {
 			const grew = await ns.grow(target);
-			// Send to external logger for analysis.
-			await ns.wget(
-				`https://192.168.0.2:8080/grow/${target}/${grew}`,
-				"junk.txt"
-			);
+			await remoteLog(ns, "grow", target, grew);
 		} else {
 			const stole = await ns.hack(target);
-			// Send to external logger for analysis.
-			await ns.wget(
-				`https://192.168.0.2:8080/hack/${target}/${stole}`,
-				"junk.txt"
-			);
-
+			await remoteLog(ns, "hack", target, stole);
 		}
-
-		const v = ns.getServerSecurityLevel(target);
-		const vFmt = new Intl.NumberFormat().format(v);
-		ns.print(`Security of server: ${vFmt}`);
-
-		const money = ns.getServerMoneyAvailable(target);
-		const moneyFmt = new Intl.NumberFormat().format(money);
-		ns.print(`Money on server: \$${moneyFmt}`);
 	}
 }
