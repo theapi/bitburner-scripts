@@ -39,11 +39,27 @@ export async function main(ns) {
 
 	while (true) {
 		if (ns.getServerSecurityLevel(target) > securityThresh) {
-			await ns.weaken(target);
+			const weak = await ns.weaken(target);
+			// Send to external logger for analysis.
+			await ns.wget(
+				`https://192.168.0.2:8080/eaken/${target}/${weak}`,
+				"junk.txt"
+			);
 		} else if (ns.getServerMoneyAvailable(target) < moneyThresh) {
-			await ns.grow(target);
+			const grew = await ns.grow(target);
+			// Send to external logger for analysis.
+			await ns.wget(
+				`https://192.168.0.2:8080/grow/${target}/${grew}`,
+				"junk.txt"
+			);
 		} else {
-			await ns.hack(target);
+			const stole = await ns.hack(target);
+			// Send to external logger for analysis.
+			await ns.wget(
+				`https://192.168.0.2:8080/hack/${target}/${stole}`,
+				"junk.txt"
+			);
+
 		}
 
 		const v = ns.getServerSecurityLevel(target);
