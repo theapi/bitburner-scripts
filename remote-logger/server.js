@@ -1,6 +1,10 @@
 const http = require('https');
 const fs = require("fs");
 
+const esClient = require('./elasticsearch/connection.js');
+const ElasticsearchLogger = require('./ElasticsearchLogger.js');
+const esLogger = new ElasticsearchLogger(esClient, esConfig.bitburner.index);
+
 /*
 openssl genrsa -out privatekey.pem 1024
 openssl req -new -key privatekey.pem -out certrequest.csr
@@ -23,6 +27,15 @@ const handler = function (req, res) {
   setCORS(req, res);
   res.writeHead(200);
   console.log(req.url);
+  const data = req.url.split("/");
+  console.log(data);
+  const payload = {
+    timestamp: new Date().getTime(),
+    "action": data[0],
+    "server": data[1],
+    "amount": data[2],
+  };
+  esLogger.log(payload);
   res.write(req.url);
   res.end(':)');
 }

@@ -8,15 +8,18 @@ client.indices.create({
     "mappings": {
       "_doc": {
         "properties": {
-          "hack": {
-            "type": "long"
+          "timestamp": {
+            "type": "date"
           },
-          "grow": {
+          "action": {
+            "type": "text"
+          },
+          "server": {
+            "type": "text"
+          },
+          "amount": {
             "type": "double"
           },
-          "weaken": {
-            "type": "double"
-          }
         }
       }
     }
