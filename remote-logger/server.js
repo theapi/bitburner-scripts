@@ -33,9 +33,9 @@ const handler = function (req, res) {
   console.log(data);
   const payload = {
     timestamp: new Date().getTime(),
-    "action": data[0],
-    "server": data[1],
-    "amount": data[2],
+    "action": data[1],
+    "server": data[2],
+    "amount": data[3],
   };
   esLogger.log(payload);
   res.write(req.url);
