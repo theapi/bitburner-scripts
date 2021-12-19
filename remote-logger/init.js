@@ -12,10 +12,12 @@ client.indices.create({
             "type": "date"
           },
           "action": {
-            "type": "text"
+            "type": "text",
+            "fields": { "raw": { "type": "keyword" } }
           },
           "server": {
-            "type": "text"
+            "type": "text",
+            "fields": { "raw": { "type": "keyword" } }
           },
           "amount": {
             "type": "double"
