@@ -4,7 +4,8 @@ const config = require('config');
 
 const esClient = require('./elasticsearch/connection.js');
 const ElasticsearchLogger = require('./ElasticsearchLogger.js');
-const esLogger = new ElasticsearchLogger(esClient, config.bitburner.index);
+const esConfig = config.get('elasticsearch');
+const esLogger = new ElasticsearchLogger(esClient, esConfig.bitburner.index);
 
 /*
 openssl genrsa -out privatekey.pem 1024
