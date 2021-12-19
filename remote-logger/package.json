@@ -2,7 +2,7 @@
   "name": "bitburner_datalogger",
   "version": "0.0.1",
   "description": "Log the bitburner payloads",
-  "main": "app.js",
+  "main": "server.js",
   "engines": {
     "node": ">=14.17.0"
   },
