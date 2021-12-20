@@ -21,46 +21,43 @@ export async function main(ns) {
 
   let cnt = 8;
 
-  while(ns.hacknet.numNodes() < cnt) {
+  while (ns.hacknet.numNodes() < cnt) {
     let res = ns.hacknet.purchaseNode();
     ns.print(`Purchased ns.hacknet Node with index: ${res}`);
   };
 
   for (let i = 0; i < cnt; i++) {
-    while (ns.hacknet.getNodeStats(i).level <= 80) {
-        let cost = ns.hacknet.getLevelUpgradeCost(i, 10);
-        while (myMoney(ns) < cost) {
-            ns.print("Need $" + cost + " . Have $" + myMoney(ns));
-            await ns.sleep(3000);
-        }
-        ns.hacknet.upgradeLevel(i, 10);
+    while (ns.hacknet.getNodeStats(i).level < 200) {
+      let cost = ns.hacknet.getLevelUpgradeCost(i, 1);
+      while (myMoney(ns) < cost) {
+        ns.print(`Level upgrade needs ${cost}`);
+        await ns.sleep(3000);
+      }
+      ns.hacknet.upgradeLevel(i, 1);
     };
   };
 
-  ns.print("All nodes upgraded to level 80");
 
   for (let i = 0; i < cnt; i++) {
-    while (ns.hacknet.getNodeStats(i).ram < 16) {
-        let cost = ns.hacknet.getRamUpgradeCost(i, 2);
-        while (myMoney(ns) < cost) {
-            ns.print("Need $" + cost + " . Have $" + myMoney(ns));
-            await ns.sleep(3000);
-        }
-        ns.hacknet.upgradeRam(i, 2);
+    while (ns.hacknet.getNodeStats(i).ram < 32) {
+      let cost = ns.hacknet.getRamUpgradeCost(i, 1);
+      while (myMoney(ns) < cost) {
+        ns.print(`Ram upgrade needs ${cost}`);
+        await ns.sleep(3000);
+      }
+      ns.hacknet.upgradeRam(i, 1);
     };
   };
-  ns.print("All nodes upgraded to 16GB RAM");
+
 
   for (var i = 0; i < cnt; i++) {
-    while (ns.hacknet.getNodeStats(i).cores < 8) {
-        var cost = ns.hacknet.getCoreUpgradeCost(i, 1);
-        while (myMoney(ns) < cost) {
-            ns.print("Need $" + cost + " . Have $" + myMoney(ns));
-            await ns.sleep(3000);
-        }
-        ns.hacknet.upgradeCore(i, 1);
+    while (ns.hacknet.getNodeStats(i).cores < 10) {
+      var cost = ns.hacknet.getCoreUpgradeCost(i, 1);
+      while (myMoney(ns) < cost) {
+        ns.print(`Core upgrade needs ${cost}`);
+        await ns.sleep(3000);
+      }
+      ns.hacknet.upgradeCore(i, 1);
     };
   };
-
-  ns.print("All nodes upgraded to 8 cores");
 }
