@@ -1,32 +1,74 @@
 /** @param {NS} ns **/
-export async function main(ns) {
-	const args = ns.flags([["help", false]]);
-	if (args.help || args._.length < 1) {
-		ns.tprint("This script nukes the target host.");
-		ns.tprint(`Usage: run ${ns.getScriptName()} HOST `);
-		ns.tprint("Example:");
-		ns.tprint(`> run ${ns.getScriptName()} n00dles`);
-		return;
-	}
 
-	const target = args._[0];
+function scan(ns, parent, server, list) {
+  const children = ns.scan(server);
+  for (let child of children) {
+    if (parent == child) {
+      continue;
+    }
+    list.push(child);
 
-	if (!ns.serverExists(target)) {
-		ns.tprint(`Server '${target}' does not exist. Aborting.`);
-		return;
-	}
-
-  const programs = ["BruteSSH.exe", "FTPCrack.exe", "relaySMTP.exe",
-  "HTTPWorm.exe", "SQLInject.exe"];
-for (let i = 0; i < programs.length; ++i) {
-  if (ns.fileExists(programs[i], "home")) {
-    if (i === 0) { ns.brutessh(target); }
-    if (i === 1) { ns.ftpcrack(target); }
-    if (i === 2) { ns.relaysmtp(target); }
-    if (i === 3) { ns.httpworm(target); }
-    if (i === 4) { ns.sqlinject(target); }
+    scan(ns, server, child, list);
   }
 }
 
-  ns.nuke(target);
+function listServers(ns) {
+  const list = [];
+  scan(ns, '', 'home', list);
+  return list;
+}
+
+export async function main(ns) {
+  const args = ns.flags([["help", false]]);
+  if (args.help) {
+    ns.tprint("This script nukes all hosts.");
+    ns.tprint(`Usage: run ${ns.getScriptName()}`);
+    ns.tprint("Example:");
+    ns.tprint(`> run ${ns.getScriptName()}`);
+    return;
+  }
+
+  const progs = ["BruteSSH.exe", "FTPCrack.exe", "relaySMTP.exe",
+    "HTTPWorm.exe", "SQLInject.exe"];
+  const programs = progs.filter(p => ns.fileExists(p, "home"));
+  ns.tprint(`${programs} available.`);
+
+  let servers = listServers(ns);
+  const boughtServers = ns.getPurchasedServers(ns);
+  servers = servers.filter(s => !boughtServers.includes(s));
+
+  for (let target of servers) {
+    if (ns.hasRootAccess(target)) {
+      ns.tprint(`${target} is already rooted :)`);
+      continue;
+    }
+
+    ns.tprint(`Targeting: ${target}...`);
+    let ports = ns.getServerNumPortsRequired(target);
+    if (ports <= programs.length) {
+      for (let p of programs) {
+        switch (p) {
+          case "BruteSSH.exe":
+            ns.brutessh(target);
+            break;
+          case "FTPCrack.exe":
+            ns.ftpcrack(target);
+            break;
+          case "relaySMTP.exe":
+            ns.relaysmtp(target);
+            break;
+          case "HTTPWorm.exe":
+            ns.httpworm(target);
+            break;
+          case "SQLInject.exe":
+            ns.sqlinject(target);
+            break;
+          default:
+            break;
+        }
+      }
+    }
+    ns.nuke(target);
+    ns.tprint(`${target} just nuked :)`);
+  }
 }
