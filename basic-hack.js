@@ -56,13 +56,12 @@ export async function main(ns) {
 	ns.print(`maxMoney: ${new Intl.NumberFormat().format(maxMoney)}`);
 	ns.print(`moneyThresh: ${new Intl.NumberFormat().format(moneyThresh)}`);
 
-	const security = ns.getServerMinSecurityLevel(target);
+  const security = ns.getServerMinSecurityLevel(target);
 	ns.print(`security: ${new Intl.NumberFormat().format(security)}`);
+  var securityThresh = security + 10;
+  ns.print(`securityThresh: ${new Intl.NumberFormat().format(securityThresh)}`);
 
 	while (true) {
-		let myLevel = ns.getHackingLevel();
-		let securityThresh = Math.floor(myLevel / 2);
-		ns.print(`securityThresh: ${new Intl.NumberFormat().format(securityThresh)}`);
 
 		if (ns.getServerSecurityLevel(target) > securityThresh) {
 			const weak = await ns.weaken(target);
