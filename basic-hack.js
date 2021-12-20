@@ -41,27 +41,29 @@ export async function main(ns) {
 		}
 	}
 
+  ns.nuke(target);
+
 	ns.disableLog("getServerSecurityLevel");
 	ns.disableLog("getServerMoneyAvailable");
 	ns.disableLog("getServerMaxMoney");
 	ns.disableLog("getServerMinSecurityLevel");
+	ns.disableLog("getHackingLevel");
 	ns.disableLog("wget");
 
 	// Defines how much money a server should have before we hack it
 	const maxMoney = ns.getServerMaxMoney(target);
-	const moneyThresh = maxMoney * 0.50;
+	const moneyThresh = maxMoney * 0.70;
 	ns.print(`maxMoney: ${new Intl.NumberFormat().format(maxMoney)}`);
 	ns.print(`moneyThresh: ${new Intl.NumberFormat().format(moneyThresh)}`);
 
-	// Defines the maximum security level the target server can
-	// have. If the target's security level is higher than this,
-	// we'll weaken it before doing anything else
 	const security = ns.getServerMinSecurityLevel(target);
-	const securityThresh = security + 30;
 	ns.print(`security: ${new Intl.NumberFormat().format(security)}`);
-	ns.print(`securityThresh: ${new Intl.NumberFormat().format(securityThresh)}`);
 
 	while (true) {
+		let myLevel = ns.getHackingLevel();
+		let securityThresh = Math.floor(myLevel / 2);
+		ns.print(`securityThresh: ${new Intl.NumberFormat().format(securityThresh)}`);
+
 		if (ns.getServerSecurityLevel(target) > securityThresh) {
 			const weak = await ns.weaken(target);
 			await remoteLog(ns, "weaken", target, weak);
