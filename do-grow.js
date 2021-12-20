@@ -12,8 +12,12 @@ export async function main(ns) {
 
 
 	while (true) {
-		await ns.grow(target);
-    const money = ns.getServerMoneyAvailable(target);
+		const value = await ns.grow(target);
+		await ns.wget(
+			`https://192.168.0.2:8080/grow/${target}/${value}`,
+			"junk.txt"
+		);
+		const money = ns.getServerMoneyAvailable(target);
 		const moneyFmt = new Intl.NumberFormat().format(money);
 		ns.print(`Money on server: \$${moneyFmt}`);
 	}
