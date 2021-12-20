@@ -1,4 +1,3 @@
-
 /** @param {NS} ns **/
 
 function myMoney(ns) {
@@ -37,9 +36,10 @@ export async function main(ns) {
     };
   };
 
-
+  ns.print("RAM upgrades");
   for (let i = 0; i < cnt; i++) {
-    while (ns.hacknet.getNodeStats(i).ram < 32) {
+
+    while (ns.hacknet.getNodeStats(i).ram < 64) {
       let cost = ns.hacknet.getRamUpgradeCost(i, 1);
       while (myMoney(ns) < cost) {
         ns.print(`Ram upgrade needs ${cost}`);
@@ -48,10 +48,11 @@ export async function main(ns) {
       ns.hacknet.upgradeRam(i, 1);
     };
   };
+  ns.print("RAM upgrades finished");
 
-
+  ns.print("Core upgrades");
   for (var i = 0; i < cnt; i++) {
-    while (ns.hacknet.getNodeStats(i).cores < 10) {
+    while (ns.hacknet.getNodeStats(i).cores < 16) {
       var cost = ns.hacknet.getCoreUpgradeCost(i, 1);
       while (myMoney(ns) < cost) {
         ns.print(`Core upgrade needs ${cost}`);
@@ -60,4 +61,5 @@ export async function main(ns) {
       ns.hacknet.upgradeCore(i, 1);
     };
   };
+  ns.print("Core upgrades finished");
 }
