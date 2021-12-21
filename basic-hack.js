@@ -41,7 +41,7 @@ export async function main(ns) {
 		}
 	}
 
-  ns.nuke(target);
+	ns.nuke(target);
 
 	ns.disableLog("getServerSecurityLevel");
 	ns.disableLog("getServerMoneyAvailable");
@@ -56,19 +56,21 @@ export async function main(ns) {
 	ns.print(`maxMoney: ${new Intl.NumberFormat().format(maxMoney)}`);
 	ns.print(`moneyThresh: ${new Intl.NumberFormat().format(moneyThresh)}`);
 
-  const security = ns.getServerMinSecurityLevel(target);
+	const security = ns.getServerMinSecurityLevel(target);
 	ns.print(`security: ${new Intl.NumberFormat().format(security)}`);
-  var securityThresh = security + 10;
-  ns.print(`securityThresh: ${new Intl.NumberFormat().format(securityThresh)}`);
+	var securityThresh = security + 10;
+	ns.print(`securityThresh: ${new Intl.NumberFormat().format(securityThresh)}`);
 
 	while (true) {
 
 		if (ns.getServerSecurityLevel(target) > securityThresh) {
-			const weak = await ns.weaken(target);
-			await remoteLog(ns, "weaken", target, weak);
+			await ns.weaken(target);
+			const value = ns.getServerSecurityLevel(target);
+			await remoteLog(ns, "weaken", target, value);
 		} else if (ns.getServerMoneyAvailable(target) < moneyThresh) {
-			const grew = await ns.grow(target);
-			await remoteLog(ns, "grow", target, grew);
+			await ns.grow(target);
+			const value = ns.getServerMoneyAvailable(target);
+			await remoteLog(ns, "grow", target, value);
 		} else {
 			const stole = await ns.hack(target);
 			await remoteLog(ns, "hack", target, stole);
