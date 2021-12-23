@@ -1,0 +1,10 @@
+megacorp
+b-and-a
+omnitek
+rho-construction
+fulcrumtech
+the-hub
+solaris
+phantasy
+
+5851 threads on bought server with 16384 ram

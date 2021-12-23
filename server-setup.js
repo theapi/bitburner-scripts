@@ -18,6 +18,7 @@ export async function main(ns) {
 
   const scripts = [
     'basic-hack.js',
+    'threads.js',
     'do-grow.js',
     'do-weaken.js',
     'do-hack.js',

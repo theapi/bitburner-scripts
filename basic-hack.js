@@ -61,19 +61,29 @@ export async function main(ns) {
 	var securityThresh = security + 10;
 	ns.print(`securityThresh: ${new Intl.NumberFormat().format(securityThresh)}`);
 
+	let weaken = 0;
+	let grow = 0;
+
 	while (true) {
 
 		if (ns.getServerSecurityLevel(target) > securityThresh) {
 			await ns.weaken(target);
-			const value = ns.getServerSecurityLevel(target);
-			await remoteLog(ns, "weaken", target, value);
+			const v = ns.getServerSecurityLevel(target);
+			if (v != weaken) {
+				// Only log if it changes.
+				await remoteLog(ns, "weaken", target, v);
+			}
+			weaken = v;
 		} else if (ns.getServerMoneyAvailable(target) < moneyThresh) {
 			await ns.grow(target);
-			const value = ns.getServerMoneyAvailable(target);
-			await remoteLog(ns, "grow", target, value);
+			const v = ns.getServerMoneyAvailable(target);
+			if (v != grow) {
+				await remoteLog(ns, "grow", target, v);
+			}
+			grow = v;
 		} else {
-			const stole = await ns.hack(target);
-			await remoteLog(ns, "hack", target, stole);
+			const v = await ns.hack(target);
+			await remoteLog(ns, "hack", target, v);
 		}
 	}
 }

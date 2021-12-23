@@ -13,10 +13,10 @@ export async function main(ns) {
 
 	while (true) {
 		await ns.weaken(target);
-		const value = ns.getServerSecurityLevel(target);
-		await ns.wget(
-			`https://192.168.0.2:8080/grow/${target}/${value}`,
-			"junk.txt"
-		);
+		// const value = ns.getServerSecurityLevel(target);
+		// await ns.wget(
+		// 	`https://192.168.0.2:8080/grow/${target}/${value}`,
+		// 	"junk.txt"
+		// );
 	}
 }

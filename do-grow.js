@@ -12,13 +12,11 @@ export async function main(ns) {
 
 
 	while (true) {
-		const value = await ns.grow(target);
-		await ns.wget(
-			`https://192.168.0.2:8080/grow/${target}/${value}`,
-			"junk.txt"
-		);
-		const money = ns.getServerMoneyAvailable(target);
-		const moneyFmt = new Intl.NumberFormat().format(money);
-		ns.print(`Money on server: \$${moneyFmt}`);
+		await ns.grow(target);
+		// const value = ns.getServerMoneyAvailable(target);
+		// await ns.wget(
+		// 	`https://192.168.0.2:8080/grow/${target}/${value}`,
+		// 	"junk.txt"
+		// );
 	}
 }
