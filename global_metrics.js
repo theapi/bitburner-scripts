@@ -11,6 +11,7 @@ export async function main(ns){
 
   let visited = ['home'];
   let nodes = ns.scan('home');
+  let results = [];
 
   let bestTarget = createMetric(ns, 'foodnstuff');
 
@@ -21,6 +22,11 @@ export async function main(ns){
       }
 
       let metric = createMetric(ns, node);
+      results.push({
+        name: metric.name,
+        cash: metric.maxCash,
+        growth: metric.growthFactor,
+      });
 
       if (compareMetrics(ns, metric, bestTarget)){
           bestTarget = metric;
@@ -29,10 +35,19 @@ export async function main(ns){
       nodes = nodes.concat(ns.scan(node));
   }
 
+  results.sort((a, b) => {
+      return a.cash - b.cash;
+  });
+
   if (bestTarget === null){
       ns.tprint("Could not find target, please check for bugs");
       return;
   }
+
+  for (let r of results) {
+    ns.tprint(`${r.name} - cash: ${new Intl.NumberFormat().format(r.cash)} : growth: ${r.growth}`);
+  }
+
   ns.tprint(bestTarget.name);
   ns.tprint("min Sec: "+bestTarget.minSecLevel);
   ns.tprint("Max cash: $"+bestTarget.maxCash);
@@ -55,12 +70,12 @@ function createMetric(ns, hostname){
 }
 
 function compareMetrics(ns, a, b){
-  ns.tprint("Comparing: " + a.name + ", " + b.name);
+  //ns.tprint("Comparing: " + a.name + ", " + b.name);
   // returns true is A is 'better' than B
 
   if (a.hackChance = 100) {
-    ns.tprint(a);
-    ns.tprint(`${a.name} - maxCash: ${new Intl.NumberFormat().format(a.maxCash)}`);
+    // ns.tprint(a);
+    // ns.tprint(`${a.name} - maxCash: ${new Intl.NumberFormat().format(a.maxCash)} : growthFactor: ${a.growthFactor}`);
   }
 
   if (!a || !a.maxCash || !ns.hasRootAccess(a.name) || a.requiredLevel > ns.getHackingLevel()
