@@ -19,6 +19,6 @@ export async function main(ns) {
   const hackRam = ns.getScriptRam(scr, host);
   ns.tprint(`hackRam ${hackRam}`);
 
-  const t = Math.ceil(available / hackRam);
+  const t = Math.floor(available / hackRam);
   ns.tprint(`Max threads for ${host} is ${t}`);
 }
