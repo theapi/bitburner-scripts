@@ -1,4 +1,5 @@
 const http = require('https');
+const url = require('url');
 const fs = require("fs");
 const config = require('config');
 
@@ -33,6 +34,7 @@ const handler = function (req, res) {
 		return;
 	}
 
+  // No POSTing :(
   if ( req.method === 'POST' ) {
 		console.log('POST')
     let body = '';
@@ -47,16 +49,51 @@ const handler = function (req, res) {
 	}
 
   // GET request
-  console.log(req.url);
+  // console.log(req.url);
   const data = req.url.split("/");
-  console.log(data);
+  // console.log(data);
   const payload = {
     timestamp: new Date().getTime(),
     "action": data[1],
     "server": data[2],
     "amount": data[3],
   };
-  esLogger.log(payload);
+  // console.log(payload);
+  if (payload.action.startsWith("player")) {
+    const q = url.parse(req.url, true).query;
+    if (q.h) {
+      const p = {
+        timestamp: new Date().getTime(),
+        action: "player",
+        server: "hacking",
+        amount: q.h,
+      };
+      esLogger.log(p);
+    }
+    if (q.m) {
+      const p = {
+        timestamp: new Date().getTime(),
+        action: "player",
+        server: "money",
+        amount: q.m,
+      };
+      // console.log(p);
+      esLogger.log(p);
+    }
+    if (q.w) {
+      const p = {
+        timestamp: new Date().getTime(),
+        action: "player",
+        server: "working",
+        amount: q.w,
+      };
+      esLogger.log(p);
+    }
+  } else {
+    esLogger.log(payload);
+  }
+
+
   res.write(req.url);
   res.end(':)');
 }

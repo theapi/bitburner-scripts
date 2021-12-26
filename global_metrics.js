@@ -1,10 +1,3 @@
-// From https://github.com/Nolshine/bitburner-scripts/blob/master/global_metrics.ns.js
-
-// Script for comparing the metrics of different servers
-// and returning the best current target.
-// Atm it just uses max money, I was attempting to use
-// more clever metrics before but there seems to be little point
-// when comparing effort to result
 
 /** @param {NS} ns **/
 export async function main(ns){
@@ -70,13 +63,7 @@ function createMetric(ns, hostname){
 }
 
 function compareMetrics(ns, a, b){
-  //ns.tprint("Comparing: " + a.name + ", " + b.name);
   // returns true is A is 'better' than B
-
-  if (a.hackChance = 100) {
-    // ns.tprint(a);
-    // ns.tprint(`${a.name} - maxCash: ${new Intl.NumberFormat().format(a.maxCash)} : growthFactor: ${a.growthFactor}`);
-  }
 
   if (!a || !a.maxCash || !ns.hasRootAccess(a.name) || a.requiredLevel > ns.getHackingLevel()
   || a.hackChance < 90) {

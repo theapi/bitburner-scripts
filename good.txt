@@ -8,3 +8,7 @@ solaris
 phantasy
 
 5851 threads on bought server with 16384 ram
+
+early:
+n00dles
+harakiri-sushi

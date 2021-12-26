@@ -32,15 +32,20 @@ export async function main(ns) {
 	while (true) {
     const player = ns.getPlayer();
 
+    await ns.wget(
+      `https://192.168.0.2:8080/player?h=${player.hacking}&m=${player.money}&w=${player.workRepGained}`,
+      "junk.txt"
+    );
+
     // ns.print(player);
-    await ns.wget(
-      `https://192.168.0.2:8080/player/hacking/${player.hacking}`,
-      "junk.txt"
-    );
-    await ns.wget(
-      `https://192.168.0.2:8080/player/money/${player.money}`,
-      "junk.txt"
-    );
+    // await ns.wget(
+    //   `https://192.168.0.2:8080/player/hacking/${player.hacking}`,
+    //   "junk.txt"
+    // );
+    // await ns.wget(
+    //   `https://192.168.0.2:8080/player/money/${player.money}`,
+    //   "junk.txt"
+    // );
 
     await ns.sleep(60000);
 	}
