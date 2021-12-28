@@ -19,6 +19,7 @@ export async function main(ns){
         name: metric.name,
         cash: metric.maxCash,
         growth: metric.growthFactor,
+        chance: metric.hackChance,
       });
 
       if (compareMetrics(ns, metric, bestTarget)){
@@ -38,7 +39,7 @@ export async function main(ns){
   }
 
   for (let r of results) {
-    ns.tprint(`${r.name} - cash: ${new Intl.NumberFormat().format(r.cash)} : growth: ${r.growth}`);
+    ns.tprint(`${r.name} - cash: ${new Intl.NumberFormat().format(r.cash)} : growth: ${r.growth} : chance: ${r.chance}`);
   }
 
   ns.tprint(bestTarget.name);
