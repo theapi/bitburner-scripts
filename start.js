@@ -1,3 +1,13 @@
+
+function numThreads(ns, script, host, reserveRam = 0) {
+  const max = ns.getServerMaxRam(host);
+  const used = ns.getServerUsedRam(host) + reserveRam;
+  const available = max - used;
+  const hackRam = ns.getScriptRam(script, host);
+
+  return Math.floor(available / hackRam);
+}
+
 /** @param {NS} ns **/
 export async function main(ns) {
   const args = ns.flags([['help', false]]);
@@ -12,40 +22,59 @@ export async function main(ns) {
   // Log to Elasticsearch.
   ns.exec("remote-log.js", "home");
 
-  // What kind of home server do we have?
-  let availableRam = ns.getServerUsedRam("home");
-  if (availableRam < 4000) {
-    // Early days, use the othe startup script
-    ns.exec("startup.script", "home");
-    ns.exit();
-  }
-
   // Get some quick cash and hacking points.
-  const hackRam = ns.getScriptRam("basic-hack.js", "home") + 512;
-  let t = Math.floor(availableRam / hackRam);
-  const noodles = ns.exec("basic-hack.js", "home", t, "n00dles");
-  let money = ns.getServerMoneyAvailable("home");
+  // but keep sone ram free.
+  let t = numThreads(ns, "basic-hack.js", "home", 8);
+  ns.exec("basic-hack.js", "home", t, "n00dles");
 
-  while (money < 4000000) {
+  // Tor = 200,000
+  let money = ns.getServerMoneyAvailable("home");
+  while (money < 210000) {
     await ns.sleep(2000);
     money = ns.getServerMoneyAvailable("home");
   }
+  if (!ns.purchaseTor()) {
+    ns.tprint("Tor purchase failed");
+    // No idea why, bail...
+    ns.exit();
+  }
 
+  /*
+BruteSSH.exe - $500.000k - Opens up SSH Ports.
+FTPCrack.exe - $1.500m - Opens up FTP Ports.
+relaySMTP.exe - $5.000m - Opens up SMTP Ports.
+HTTPWorm.exe - $30.000m - Opens up HTTP Ports.
+SQLInject.exe - $250.000m - Opens up SQL Ports.
+  */
+
+  // Buy brutessh
+  if (!ns.fileExists("BruteSSH.exe", "home")) {
+    money = ns.getServerMoneyAvailable("home");
+    while (money < 500000) {
+      await ns.sleep(2000);
+      money = ns.getServerMoneyAvailable("home");
+    }
+    if (!ns.purchaseProgram("BruteSSH.exe")) {
+      ns.tprint("BruteSSH purchase failed");
+      ns.exit();
+    }
+  }
+
+  // Time for joesguns
   ns.kill("basic-hack.js", "home", t, "n00dles");
+  let t = numThreads(ns, "basic-hack.js", "home", 8);
+  ns.exec("basic-hack.js", "home", t, "joesguns");
 
-  // Damn can't buy TOR until later :(
-  // https://github.com/danielyxie/bitburner/blob/dev/markdown/bitburner.singularity.purchasetor.md
-  // // Buy the port hacking programs.
-  // let money = ns.getServerMoneyAvailable("home");
-  // // Wait untill the TOR server can be bought.
-  // while (money < 200000) {
-  //   await ns.sleep(2000);
-  //   money = ns.getServerMoneyAvailable("home");
-  // }
-
-
-
-
-
-  // Run the money makers.
+  // Buy FTPCrack.exe
+  if (!ns.fileExists("FTPCrack.exe", "home")) {
+    money = ns.getServerMoneyAvailable("home");
+    while (money < 1500000) {
+      await ns.sleep(2000);
+      money = ns.getServerMoneyAvailable("home");
+    }
+    if (!ns.purchaseProgram("FTPCrack.exe")) {
+      ns.tprint("FTPCrack.exe purchase failed");
+      ns.exit();
+    }
+  }
 }
