@@ -19,6 +19,8 @@ export async function main(ns) {
     return;
   }
 
+  ns.disableLog("getServerMoneyAvailable");
+
   // Log to Elasticsearch.
   ns.exec("remote-log.js", "home");
 
@@ -33,11 +35,8 @@ export async function main(ns) {
     await ns.sleep(2000);
     money = ns.getServerMoneyAvailable("home");
   }
-  if (!ns.purchaseTor()) {
-    ns.tprint("Tor purchase failed");
-    // No idea why, bail...
-    ns.exit();
-  }
+  ns.purchaseTor();
+  ns.tprint("Tor got");
 
   /*
 BruteSSH.exe - $500.000k - Opens up SSH Ports.
@@ -49,9 +48,11 @@ SQLInject.exe - $250.000m - Opens up SQL Ports.
 
   // Buy brutessh
   if (!ns.fileExists("BruteSSH.exe", "home")) {
+    ns.tprint("Starting brutessh buying process");
     money = ns.getServerMoneyAvailable("home");
     while (money < 500000) {
-      await ns.sleep(2000);
+      ns.tprint(" brutessh not enought money yet");
+      await ns.sleep(5000);
       money = ns.getServerMoneyAvailable("home");
     }
     if (!ns.purchaseProgram("BruteSSH.exe")) {
@@ -60,16 +61,11 @@ SQLInject.exe - $250.000m - Opens up SQL Ports.
     }
   }
 
-  // Time for joesguns
-  ns.kill("basic-hack.js", "home", t, "n00dles");
-  let t = numThreads(ns, "basic-hack.js", "home", 8);
-  ns.exec("basic-hack.js", "home", t, "joesguns");
-
   // Buy FTPCrack.exe
   if (!ns.fileExists("FTPCrack.exe", "home")) {
     money = ns.getServerMoneyAvailable("home");
-    while (money < 1500000) {
-      await ns.sleep(2000);
+    while (money < 1600000) {
+      await ns.sleep(5000);
       money = ns.getServerMoneyAvailable("home");
     }
     if (!ns.purchaseProgram("FTPCrack.exe")) {
@@ -77,4 +73,33 @@ SQLInject.exe - $250.000m - Opens up SQL Ports.
       ns.exit();
     }
   }
+
+  // Auto buy servers to hammer joesguns
+  ns.exec("auto-buy-servers.js", "home", 1, "512", "basic-hack.js", "joesguns");
+
+  ns.tprint("Waiting for enough money to stop attacking n00dles");
+  money = ns.getServerMoneyAvailable("home");
+  while (money < 10000000) {
+    await ns.sleep(30000);
+    money = ns.getServerMoneyAvailable("home");
+  }
+
+  // Time for joesguns
+  ns.kill("basic-hack.js", "home", "n00dles");
+  ns.tprint("restarting hack to target joesguns");
+  // wait for script to die.
+  await ns.sleep(10000);
+  t = numThreads(ns, "basic-hack.js", "home", 8);
+  ns.exec("basic-hack.js", "home", t, "joesguns");
+
+  // Attack phantasy when ready
+  let player = ns.getPlayer();
+  while (player.hacking < 200) {
+    await ns.sleep(20000);
+    player = ns.getPlayer();
+  }
+  ns.kill("basic-hack.js", "home", "joesguns");
+  await ns.sleep(10000);
+  t = numThreads(ns, "basic-hack.js", "home", 8);
+  ns.exec("basic-hack.js", "home", t, "phantasy");
 }
