@@ -26,7 +26,7 @@ export async function main(ns) {
 
   // Get some quick cash and hacking points.
   // but keep sone ram free.
-  let t = numThreads(ns, "basic-hack.js", "home", 8);
+  let t = numThreads(ns, "basic-hack.js", "home", 10);
   ns.exec("basic-hack.js", "home", t, "n00dles");
 
   // Tor = 200,000
@@ -75,7 +75,7 @@ SQLInject.exe - $250.000m - Opens up SQL Ports.
   }
 
   // Auto buy servers to hammer joesguns
-  ns.exec("auto-buy-servers.js", "home", 1, "512", "basic-hack.js", "joesguns");
+  ns.exec("auto-buy-servers.js", "home", 1, "2048", "basic-hack.js", "joesguns");
 
   ns.tprint("Waiting for enough money to stop attacking n00dles");
   money = ns.getServerMoneyAvailable("home");
@@ -84,12 +84,18 @@ SQLInject.exe - $250.000m - Opens up SQL Ports.
     money = ns.getServerMoneyAvailable("home");
   }
 
+  // Buy relaySMTP.exe
+  if (!ns.fileExists("relaySMTP.exe", "home")) {
+    money = ns.getServerMoneyAvailable("home");
+    ns.purchaseProgram("relaySMTP.exe");
+  }
+
   // Time for joesguns
   ns.kill("basic-hack.js", "home", "n00dles");
   ns.tprint("restarting hack to target joesguns");
   // wait for script to die.
-  await ns.sleep(10000);
-  t = numThreads(ns, "basic-hack.js", "home", 8);
+  await ns.sleep(2000);
+  t = numThreads(ns, "basic-hack.js", "home", 10);
   ns.exec("basic-hack.js", "home", t, "joesguns");
 
   // Attack phantasy when ready
@@ -100,6 +106,11 @@ SQLInject.exe - $250.000m - Opens up SQL Ports.
   }
   ns.kill("basic-hack.js", "home", "joesguns");
   await ns.sleep(10000);
-  t = numThreads(ns, "basic-hack.js", "home", 8);
+  t = numThreads(ns, "basic-hack.js", "home", 10);
   ns.exec("basic-hack.js", "home", t, "phantasy");
+
+  // Now bigger servers
+  ns.kill("auto-buy-servers.js", "home", "2048", "basic-hack.js", "joesguns");
+  ns.exec("auto-buy-servers.js", "home", 1, "8192", "basic-hack.js", "joesguns");
+
 }

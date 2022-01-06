@@ -20,6 +20,8 @@ export async function main(ns){
         cash: metric.maxCash,
         growth: metric.growthFactor,
         chance: metric.hackChance,
+        hack: metric.requiredLevel,
+        ram: metric.ram,
       });
 
       if (compareMetrics(ns, metric, bestTarget)){
@@ -39,7 +41,7 @@ export async function main(ns){
   }
 
   for (let r of results) {
-    ns.tprint(`${r.name} - cash: ${new Intl.NumberFormat().format(r.cash)} : growth: ${r.growth} : chance: ${r.chance}`);
+    ns.tprint(`${r.name}\n  - cash: ${new Intl.NumberFormat().format(r.cash)} : growth: ${r.growth} : chance: ${r.chance} : hack: ${r.hack} : ram: ${r.ram}`);
   }
 
   ns.tprint(bestTarget.name);
@@ -60,6 +62,7 @@ function createMetric(ns, hostname){
       growthFactor: ns.getServerGrowth(hostname),
       requiredLevel: ns.getServerRequiredHackingLevel(hostname),
       hackChance : (ns.hackAnalyzeChance(hostname) * 100).toFixed(2),
+      ram: ns.getServerMaxRam(hostname),
   }
 }
 

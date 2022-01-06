@@ -12,3 +12,6 @@ phantasy
 early:
 n00dles
 harakiri-sushi
+
+run auto-buy-servers.js 32768 basic-hack.js the-hub
+omega-net
