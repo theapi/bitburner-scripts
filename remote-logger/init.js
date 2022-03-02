@@ -6,23 +6,21 @@ client.indices.create({
   "index": elasticsearch.bitburner.index,
   "body": {
     "mappings": {
-      "_doc": {
-        "properties": {
-          "timestamp": {
-            "type": "date"
-          },
-          "action": {
-            "type": "text",
-            "fields": { "raw": { "type": "keyword" } }
-          },
-          "server": {
-            "type": "text",
-            "fields": { "raw": { "type": "keyword" } }
-          },
-          "amount": {
-            "type": "double"
-          },
-        }
+      "properties": {
+        "timestamp": {
+          "type": "date"
+        },
+        "action": {
+          "type": "text",
+          "fields": { "raw": { "type": "keyword" } }
+        },
+        "server": {
+          "type": "text",
+          "fields": { "raw": { "type": "keyword" } }
+        },
+        "amount": {
+          "type": "double"
+        },
       }
     }
   }

@@ -1,7 +1,7 @@
 async function remoteLog(ns, action, target, value) {
 
 	await ns.wget(
-		`https://192.168.0.2:8080/${action}/${target}/${value}`,
+		`https://192.168.0.2:8000/${action}/${target}/${value}`,
 		"junk.txt"
 	);
 

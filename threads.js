@@ -1,24 +1,24 @@
 /** @param {NS} ns **/
 export async function main(ns) {
 	const args = ns.flags([['help', false]]);
-  const scr = args._[0];
-  const host = args._[1];
-	if (args.help || !scr || !host) {
-		ns.tprint("How many threads can be run on a host");
-		ns.tprint(`USAGE: run ${ns.getScriptName()} SCRIPT HOST`);
+	let scr = args._[0];
+	if (args.help) {
+		ns.tprint("How many threads can be run on the current host");
+		ns.tprint(`USAGE: run ${ns.getScriptName()} SCRIPT`);
 		ns.tprint("Example:");
-		ns.tprint(`> run ${ns.getScriptName()} basic-hack.js home`);
+		ns.tprint(`> run ${ns.getScriptName()} basic-hack.js`);
 		return;
 	}
 
-  ns.tprint(`host ${host}`);
-  const max = ns.getServerMaxRam(host);
-  const used = ns.getServerUsedRam(host);
-  const available = max - used;
-  ns.tprint(`available ${available}`);
-  const hackRam = ns.getScriptRam(scr, host);
-  ns.tprint(`hackRam ${hackRam}`);
+	if (!scr) {
+		scr = 'basic-hack.js';
+	}
+	const host = ns.getHostname();
+	const max = ns.getServerMaxRam(host);
+	const used = ns.getServerUsedRam(host);
+	const available = max - used;
+	const hackRam = ns.getScriptRam(scr, host);
 
-  const t = Math.floor(available / hackRam);
-  ns.tprint(`Max threads for ${host} is ${t}`);
+	const t = Math.floor(available / hackRam);
+	ns.tprint(`Max threads for ${scr} is ${t}`);
 }
